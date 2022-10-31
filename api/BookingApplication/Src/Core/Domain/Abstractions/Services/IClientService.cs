@@ -12,7 +12,7 @@ namespace Domain.Abstractions.Services
         public Task<IEnumerable<Client>> GetAllClients();
         public Task<Client> GetClientById(Guid id);
         public Task<Client> CreateClient(Client client);
-        public Task<Client> UpdateClient(Client client);
+        public Task<Client> UpdateClient(Guid id, Client client);
         public Task<Client> DeleteClient(Guid id);
     }
 }
