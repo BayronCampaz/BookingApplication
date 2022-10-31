@@ -1,0 +1,22 @@
+version: '3.5'
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: db
+    environment:
+      MSSQL_SA_PASSWORD: 'TnC2Jxk7f8q7Jn8tKp2H'
+      ACCEPT_EULA: 'Y'
+      UserID: "sa"
+    volumes:
+      - ./database:/var/opt/mssql/data
+    restart: always
+    networks: 
+      - environment
+    ports:
+      - 1433:1433
+
+networks:
+  environment:
+    name: environment
+    driver: bridge
