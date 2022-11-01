@@ -45,13 +45,15 @@ namespace Persistence.Repositories
 
         public async Task<Restaurant> GetById(Guid id)
         {
-            return await _context.Restaurants.Include("Tables").FirstOrDefaultAsync(x => x.Id == id);;
+            return await _context.Restaurants.FirstOrDefaultAsync(x => x.Id == id);;
         }
 
         public async Task<Restaurant> Update(Restaurant restaurant)
         {
             Restaurant restaurantToUpdate = await GetById(restaurant.Id);
             restaurantToUpdate.Name = restaurant.Name;
+            restaurantToUpdate.Address = restaurant.Address;
+            restaurantToUpdate.City = restaurant.City;
             _context.Restaurants.Update(restaurantToUpdate);
             int changes = _context.SaveChanges();
             await Task.CompletedTask;

@@ -22,9 +22,9 @@ namespace Application.Services
         public async Task<Table> Create(Table table)
         {
             table.Id = Guid.NewGuid();
-            var createdTable = await _repository.Create(table);
-            var restaurant = await _restaurantRepository.GetById(createdTable.Restaurant.Id);
+            var restaurant = await _restaurantRepository.GetById(table.Restaurant.Id);
             table.Restaurant = restaurant ?? throw new Exception("Doesn't exist Restaurant with id " + table.Restaurant.Id);
+            var createdTable = await _repository.Create(table);
             return createdTable;
         }
 
