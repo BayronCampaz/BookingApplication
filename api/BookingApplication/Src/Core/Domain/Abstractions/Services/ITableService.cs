@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Abstractions.Services
 {
-    public interface IClientService : IService<Client>
+    public interface ITableService : IService<Table>
     {
     }
 }

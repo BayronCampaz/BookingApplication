@@ -18,7 +18,7 @@ namespace Persistence.Repositories
             _context = context;
         }
 
-        public async Task<Client> CreateClient(Client client)
+        public async Task<Client> Create(Client client)
         {
             await this._context.Clients.AddAsync(client);
             int changes = this._context.SaveChanges();
@@ -27,9 +27,9 @@ namespace Persistence.Repositories
 
         }
 
-        public async Task<Client> DeleteClient(Guid id)
+        public async Task<Client> Delete(Guid id)
         {
-            Client client = await this.GetClientById(id);
+            Client client = await this.GetById(id);
 
             this._context.Clients.Remove(client);
             int changes = _context.SaveChanges();
@@ -38,20 +38,21 @@ namespace Persistence.Repositories
 
         }
 
-        public async Task<IEnumerable<Client>> GetAllClients()
+        public async Task<IEnumerable<Client>> GetAll()
         {
             return await _context.Clients.ToListAsync();
         }
 
-        public async Task<Client> GetClientById(Guid id)
+        public async Task<Client> GetById(Guid id)
         {
             return await _context.Clients.FindAsync(id);
         }
 
-        public async Task<Client> UpdateClient(Client client)
+        public async Task<Client> Update(Client client)
         {
-            Client clientToUpdate = await GetClientById(client.Id);
+            Client clientToUpdate = await GetById(client.Id);
             clientToUpdate.Name = client.Name;
+            clientToUpdate.LastName = client.LastName;
             _context.Clients.Update(clientToUpdate);
             int changes = _context.SaveChanges();
             await Task.CompletedTask;

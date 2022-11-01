@@ -12,6 +12,6 @@ namespace Domain.Entities
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public Client Client { get; set; }
-        public Restaurant Restaurant { get; set; }
+        public Table Table { get; set; }
     }
 }

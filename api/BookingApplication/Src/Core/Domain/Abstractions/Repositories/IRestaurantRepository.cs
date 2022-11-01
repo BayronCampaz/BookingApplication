@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Domain.Abstractions.Services
+namespace Domain.Abstractions.Repositories
 {
-    public interface IClientService : IService<Client>
+    public interface IRestaurantRepository : IRepository<Restaurant>
     {
     }
 }

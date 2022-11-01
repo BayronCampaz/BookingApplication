@@ -21,31 +21,31 @@ namespace Web.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateClient(Client client)
         {
-            return Ok(await this._service.CreateClient(client));
+            return Ok(await this._service.Create(client));
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllClients()
         {
-            return Ok(await _service.GetAllClients());
+            return Ok(await _service.GetAll());
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetClientById(Guid id)
         {
-            return Ok(await _service.GetClientById(id));
+            return Ok(await _service.GetById(id));
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateClient(Guid id, Client client)
         {
-            return this.Ok(await this._service.UpdateClient(id, client));
+            return this.Ok(await this._service.Update(id, client));
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteClient(Guid id)
         {
-            return this.Ok(await this._service.DeleteClient(id));
+            return this.Ok(await this._service.Delete(id));
         }
 
 

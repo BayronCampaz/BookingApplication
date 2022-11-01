@@ -12,33 +12,33 @@ namespace Application.Services
         {
             _repository = repository;
         }
-        public async Task<Client> CreateClient(Client client)
+        public async Task<Client> Create(Client client)
         {
             client.Id = Guid.NewGuid();
-            var createdClient = await _repository.CreateClient(client);
+            var createdClient = await _repository.Create(client);
             return createdClient;
         }
 
-        public async Task<Client> DeleteClient(Guid id)
+        public async Task<Client> Delete(Guid id)
         {
-            return await _repository.DeleteClient(id);
+            return await _repository.Delete(id);
         }
 
-        public async Task<IEnumerable<Client>> GetAllClients()
+        public async Task<IEnumerable<Client>> GetAll()
         {
-            return await _repository.GetAllClients();
+            return await _repository.GetAll();
         }
 
-        public async Task<Client> GetClientById(Guid id)
+        public async Task<Client> GetById(Guid id)
         {
-            return await _repository.GetClientById(id);
+            return await _repository.GetById(id);
         }
 
-        public async Task<Client> UpdateClient(Guid id, Client client)
+        public async Task<Client> Update(Guid id, Client client)
         {
-            Client clientToUpdate = await _repository.GetClientById(id);
+            Client clientToUpdate = await _repository.GetById(id);
             client.Id = clientToUpdate.Id;
-            return await _repository.UpdateClient(client);
+            return await _repository.Update(client);
         }
     }
 }
