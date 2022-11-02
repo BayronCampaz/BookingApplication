@@ -7,6 +7,7 @@ using Persistence;
 using Persistence.Repositories;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Web.Handlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +41,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

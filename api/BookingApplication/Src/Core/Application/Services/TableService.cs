@@ -3,6 +3,7 @@ using AutoMapper;
 using Domain.Abstractions.Repositories;
 using Domain.Abstractions.Services;
 using Domain.Entities;
+using Domain.Exceptions;
 
 namespace Application.Services
 {
@@ -23,7 +24,7 @@ namespace Application.Services
             var table = _mapper.Map<Table>(tableRequest);
             table.Id = Guid.NewGuid();
             var restaurant = await _restaurantRepository.GetById(tableRequest.RestaurantId);
-            table.Restaurant = restaurant ?? throw new Exception("Doesn't exist Restaurant with id " + table.Restaurant.Id);
+            table.Restaurant = restaurant ?? throw new NotFoundException("Doesn't exist Restaurant with id " + tableRequest.RestaurantId);
             var createdTable = await _repository.Create(table);
             return createdTable;
         }

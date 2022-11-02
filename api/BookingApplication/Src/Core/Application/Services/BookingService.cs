@@ -3,23 +3,44 @@ using AutoMapper;
 using Domain.Abstractions.Repositories;
 using Domain.Abstractions.Services;
 using Domain.Entities;
+using Domain.Exceptions;
 
 namespace Application.Services
 {
     public class BookingService : IBookingService
     {
         private readonly IBookingRepository _repository;
+        private readonly ITableRepository _tableRepository;
+        private readonly IClientRepository _clientRepository;
         private readonly IMapper _mapper;
 
-        public BookingService(IBookingRepository repository, IMapper mapper)
+        public BookingService(IBookingRepository repository, 
+                              ITableRepository tableRepository, 
+                              IClientRepository clientRepository, 
+                              IMapper mapper)
         {
             _repository = repository;
+            _tableRepository = tableRepository;
+            _clientRepository = clientRepository;
             _mapper = mapper;
         }
-        public async Task<Booking> Create(BookingRequest booking)
+        public async Task<Booking> Create(BookingRequest bookingRequest)
         {
-            var newBooking = _mapper.Map<Booking>(booking);
-            var createdBooking = await _repository.Create(newBooking);
+            var booking = _mapper.Map<Booking>(bookingRequest);
+            booking.Id = Guid.NewGuid();
+            var table = await _tableRepository.GetById(bookingRequest.TableId);
+            if (table is null)
+            {
+                throw new NotFoundException("Doesn't exist a Table with id " + bookingRequest.TableId);
+            }
+            var client = await _clientRepository.GetById(bookingRequest.ClientId);
+            if (client is null)
+            {
+                throw new NotFoundException("Doesn't exist a Client with id " + bookingRequest.ClientId);
+            }
+            booking.Table = table;
+            booking.Client = client;
+            var createdBooking = await _repository.Create(booking);
             return createdBooking;
         }
 
