@@ -1,4 +1,6 @@
-﻿using Domain.Abstractions.Repositories;
+﻿using Domain.Abstractions.RequestModels;
+using AutoMapper;
+using Domain.Abstractions.Repositories;
 using Domain.Abstractions.Services;
 using Domain.Entities;
 
@@ -7,13 +9,16 @@ namespace Application.Services
     public class RestaurantService : IRestaurantService
     {
         private readonly IRestaurantRepository _repository;
+        private readonly IMapper _mapper;
 
-        public RestaurantService(IRestaurantRepository repository)
+        public RestaurantService(IRestaurantRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
-        public async Task<Restaurant> Create(Restaurant restaurant)
+        public async Task<Restaurant> Create(RestaurantRequest restaurantRequest)
         {
+            var restaurant = _mapper.Map<Restaurant>(restaurantRequest);
             restaurant.Id = Guid.NewGuid();
             var createdRestaurant = await _repository.Create(restaurant);
             return createdRestaurant;
@@ -34,8 +39,9 @@ namespace Application.Services
             return await _repository.GetById(id);
         }
 
-        public async Task<Restaurant> Update(Guid id, Restaurant restaurant)
+        public async Task<Restaurant> Update(Guid id, RestaurantRequest restaurantRequest)
         {
+            var restaurant = _mapper.Map<Restaurant>(restaurantRequest);
             Restaurant restaurantToUpdate = await _repository.GetById(id);
             restaurant.Id = restaurantToUpdate.Id;
             return await _repository.Update(restaurant);

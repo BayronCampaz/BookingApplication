@@ -1,4 +1,6 @@
-﻿using Domain.Abstractions.Repositories;
+﻿using Domain.Abstractions.RequestModels;
+using AutoMapper;
+using Domain.Abstractions.Repositories;
 using Domain.Abstractions.Services;
 using Domain.Entities;
 
@@ -7,15 +9,17 @@ namespace Application.Services
     public class ClientService : IClientService
     {
         private readonly IClientRepository _repository;
+        private readonly IMapper _mapper;
 
-        public ClientService(IClientRepository repository)
+        public ClientService(IClientRepository repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
-        public async Task<Client> Create(Client client)
+        public async Task<Client> Create(ClientRequest client)
         {
-            client.Id = Guid.NewGuid();
-            var createdClient = await _repository.Create(client);
+            var newClient = _mapper.Map<Client>(client);
+            var createdClient = await _repository.Create(newClient);
             return createdClient;
         }
 
@@ -34,10 +38,10 @@ namespace Application.Services
             return await _repository.GetById(id);
         }
 
-        public async Task<Client> Update(Guid id, Client client)
+        public async Task<Client> Update(Guid id, ClientRequest clientRequest)
         {
+            var client = _mapper.Map<Client>(clientRequest);
             Client clientToUpdate = await _repository.GetById(id);
-            client.Id = clientToUpdate.Id;
             return await _repository.Update(client);
         }
     }

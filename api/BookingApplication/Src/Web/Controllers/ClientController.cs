@@ -1,4 +1,5 @@
-﻿using Domain.Abstractions.Services;
+﻿using Domain.Abstractions.RequestModels;
+using Domain.Abstractions.Services;
 using Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,7 +20,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateClient(Client client)
+        public async Task<IActionResult> CreateClient(ClientRequest client)
         {
             return Ok(await this._service.Create(client));
         }
@@ -37,7 +38,7 @@ namespace Web.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateClient(Guid id, Client client)
+        public async Task<IActionResult> UpdateClient(Guid id, ClientRequest client)
         {
             return this.Ok(await this._service.Update(id, client));
         }

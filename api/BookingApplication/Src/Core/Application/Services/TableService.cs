@@ -1,11 +1,8 @@
-﻿using Domain.Abstractions.Repositories;
+﻿using Domain.Abstractions.RequestModels;
+using AutoMapper;
+using Domain.Abstractions.Repositories;
 using Domain.Abstractions.Services;
 using Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
@@ -13,16 +10,19 @@ namespace Application.Services
     {
         private readonly ITableRepository _repository;
         private readonly IRestaurantRepository _restaurantRepository;
+        private readonly IMapper _mapper;
 
-        public TableService(ITableRepository repository, IRestaurantRepository restaurantRepository)
+        public TableService(ITableRepository repository, IRestaurantRepository restaurantRepository, IMapper mapper)
         {
             _repository = repository;
             _restaurantRepository = restaurantRepository;
+            _mapper = mapper;
         }
-        public async Task<Table> Create(Table table)
+        public async Task<Table> Create(TableRequest tableRequest)
         {
+            var table = _mapper.Map<Table>(tableRequest);
             table.Id = Guid.NewGuid();
-            var restaurant = await _restaurantRepository.GetById(table.Restaurant.Id);
+            var restaurant = await _restaurantRepository.GetById(tableRequest.RestaurantId);
             table.Restaurant = restaurant ?? throw new Exception("Doesn't exist Restaurant with id " + table.Restaurant.Id);
             var createdTable = await _repository.Create(table);
             return createdTable;
@@ -43,8 +43,9 @@ namespace Application.Services
             return await _repository.GetById(id);
         }
 
-        public async Task<Table> Update(Guid id, Table table)
+        public async Task<Table> Update(Guid id, TableRequest tableRequest)
         {
+            var table = _mapper.Map<Table>(tableRequest);
             Table tableToUpdate = await _repository.GetById(id);
             table.Id = tableToUpdate.Id;
             return await _repository.Update(table);

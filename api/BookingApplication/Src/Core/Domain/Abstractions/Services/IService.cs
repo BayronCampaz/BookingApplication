@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Domain.Abstractions.Services
 {
-    public interface IService<T>
+    public interface IService<TRequest, T>
     {
         public Task<IEnumerable<T>> GetAll();
         public Task<T> GetById(Guid id);
-        public Task<T> Create(T client);
-        public Task<T> Update(Guid id, T client);
+        public Task<T> Create(TRequest request);
+        public Task<T> Update(Guid id, TRequest request);
         public Task<T> Delete(Guid id);
     }
 }

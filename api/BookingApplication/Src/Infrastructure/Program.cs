@@ -1,9 +1,11 @@
+using Application.Mappers;
 using Application.Services;
 using Domain.Abstractions.Repositories;
 using Domain.Abstractions.Services;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Persistence.Repositories;
+using System.Reflection;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +15,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(x => x.UseSqlServer(connectionString));
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+
+builder.Services.AddAutoMapper(cfg => cfg.AllowNullCollections = true, Assembly.GetAssembly(typeof(RestaurantProfile)));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

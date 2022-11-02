@@ -1,12 +1,7 @@
-﻿using Domain.Abstractions.Services;
-using Domain.Entities;
+﻿using Domain.Abstractions.RequestModels;
+using Domain.Abstractions.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Web.Controllers
 {
@@ -24,7 +19,7 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTable(Table table)
+        public async Task<IActionResult> CreateTable(TableRequest table)
         {
             return Ok(await this._service.Create(table));
         }
@@ -42,7 +37,7 @@ namespace Web.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTable(Guid id, Table table)
+        public async Task<IActionResult> UpdateTable(Guid id, TableRequest table)
         {
             return this.Ok(await this._service.Update(id, table));
         }
