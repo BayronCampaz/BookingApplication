@@ -13,7 +13,8 @@ namespace Application.Mappers
     {
         public BookingProfile()
         {
-            this.CreateMap<Booking, BookingRequest>().ReverseMap();
+            this.CreateMap<Booking, BookingRequest>().ReverseMap()
+                .ForAllMembers(x => x.Condition((src, dest, srcValue) => srcValue != null));
         }
     }
 }

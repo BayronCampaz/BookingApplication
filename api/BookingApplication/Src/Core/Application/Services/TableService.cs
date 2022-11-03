@@ -23,7 +23,7 @@ namespace Application.Services
         {
             var table = _mapper.Map<Table>(tableRequest);
             table.Id = Guid.NewGuid();
-            var restaurant = await _restaurantRepository.GetById(tableRequest.RestaurantId);
+            var restaurant = await _restaurantRepository.GetById((Guid)tableRequest.RestaurantId);
             table.Restaurant = restaurant ?? throw new NotFoundException("Doesn't exist Restaurant with id " + tableRequest.RestaurantId);
             var createdTable = await _repository.Create(table);
             return createdTable;
@@ -46,10 +46,13 @@ namespace Application.Services
 
         public async Task<Table> Update(Guid id, TableRequest tableRequest)
         {
-            var table = _mapper.Map<Table>(tableRequest);
             Table tableToUpdate = await _repository.GetById(id);
-            table.Id = tableToUpdate.Id;
-            return await _repository.Update(table);
+            if (tableToUpdate == null)
+            {
+                throw new NotFoundException("Doesn't exist Table with id " + id);
+            }
+            _mapper.Map(tableRequest, tableToUpdate);
+            return await _repository.Update(tableToUpdate);
         }
     }
 }

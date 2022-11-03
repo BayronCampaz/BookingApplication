@@ -3,6 +3,7 @@ using AutoMapper;
 using Domain.Abstractions.Repositories;
 using Domain.Abstractions.Services;
 using Domain.Entities;
+using Domain.Exceptions;
 
 namespace Application.Services
 {
@@ -40,9 +41,13 @@ namespace Application.Services
 
         public async Task<Client> Update(Guid id, ClientRequest clientRequest)
         {
-            var client = _mapper.Map<Client>(clientRequest);
             Client clientToUpdate = await _repository.GetById(id);
-            return await _repository.Update(client);
+            if (clientToUpdate == null)
+            {
+                throw new NotFoundException("Doesn't exist Client with id " + id);
+            }
+            _mapper.Map(clientRequest, clientToUpdate);
+            return await _repository.Update(clientToUpdate);
         }
     }
 }

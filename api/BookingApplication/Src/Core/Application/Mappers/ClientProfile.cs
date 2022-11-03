@@ -8,7 +8,8 @@ namespace Application.Mappers
     {
         public ClientProfile()
         {
-            this.CreateMap<Client, ClientRequest>().ReverseMap();
+            this.CreateMap<Client, ClientRequest>().ReverseMap()
+                .ForAllMembers(x => x.Condition((src, dest, srcValue) => srcValue != null));
         }
     }
 }

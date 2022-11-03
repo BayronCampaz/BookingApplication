@@ -8,7 +8,8 @@ namespace Application.Mappers
     {
         public RestaurantProfile()
         {
-            this.CreateMap<Restaurant, RestaurantRequest>().ReverseMap();
+            this.CreateMap<Restaurant, RestaurantRequest>().ReverseMap()
+                .ForAllMembers(x => x.Condition((src, dest, srcValue) => srcValue != null));
         }
     }
 }

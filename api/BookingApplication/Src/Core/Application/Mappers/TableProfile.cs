@@ -13,7 +13,8 @@ namespace Application.Mappers
     {
         public TableProfile()
         {
-            this.CreateMap<Table, TableRequest>().ReverseMap();
+            this.CreateMap<Table, TableRequest>().ReverseMap()
+                .ForAllMembers(x => x.Condition((src, dest, srcValue) => srcValue != null));
         }
     }
 }

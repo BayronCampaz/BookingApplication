@@ -3,6 +3,8 @@ using AutoMapper;
 using Domain.Abstractions.Repositories;
 using Domain.Abstractions.Services;
 using Domain.Entities;
+using Domain.Exceptions;
+using FluentValidation;
 
 namespace Application.Services
 {
@@ -10,14 +12,17 @@ namespace Application.Services
     {
         private readonly IRestaurantRepository _repository;
         private readonly IMapper _mapper;
+        private readonly IValidator<RestaurantRequest> _validator;
 
-        public RestaurantService(IRestaurantRepository repository, IMapper mapper)
+        public RestaurantService(IRestaurantRepository repository, IMapper mapper, IValidator<RestaurantRequest> validator)
         {
             _repository = repository;
             _mapper = mapper;
+            _validator = validator;
         }
         public async Task<Restaurant> Create(RestaurantRequest restaurantRequest)
         {
+            _validator.ValidateAndThrow(restaurantRequest);
             var restaurant = _mapper.Map<Restaurant>(restaurantRequest);
             restaurant.Id = Guid.NewGuid();
             var createdRestaurant = await _repository.Create(restaurant);
@@ -41,10 +46,13 @@ namespace Application.Services
 
         public async Task<Restaurant> Update(Guid id, RestaurantRequest restaurantRequest)
         {
-            var restaurant = _mapper.Map<Restaurant>(restaurantRequest);
             Restaurant restaurantToUpdate = await _repository.GetById(id);
-            restaurant.Id = restaurantToUpdate.Id;
-            return await _repository.Update(restaurant);
+            if(restaurantToUpdate == null)
+            {
+                throw new NotFoundException("Doesn't exist Restaurant with id " + id);
+            }
+            _mapper.Map(restaurantRequest, restaurantToUpdate);
+            return await _repository.Update(restaurantToUpdate);
         }
     }
 }

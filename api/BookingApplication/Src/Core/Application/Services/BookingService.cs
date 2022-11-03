@@ -28,12 +28,12 @@ namespace Application.Services
         {
             var booking = _mapper.Map<Booking>(bookingRequest);
             booking.Id = Guid.NewGuid();
-            var table = await _tableRepository.GetById(bookingRequest.TableId);
+            var table = await _tableRepository.GetById((Guid)bookingRequest.TableId);
             if (table is null)
             {
                 throw new NotFoundException("Doesn't exist a Table with id " + bookingRequest.TableId);
             }
-            var client = await _clientRepository.GetById(bookingRequest.ClientId);
+            var client = await _clientRepository.GetById((Guid)bookingRequest.ClientId);
             if (client is null)
             {
                 throw new NotFoundException("Doesn't exist a Client with id " + bookingRequest.ClientId);
@@ -61,10 +61,13 @@ namespace Application.Services
 
         public async Task<Booking> Update(Guid id, BookingRequest bookingRequest)
         {
-            var booking = _mapper.Map<Booking>(bookingRequest);
             Booking bookingToUpdate = await _repository.GetById(id);
-            booking.Id = bookingToUpdate.Id;
-            return await _repository.Update(booking);
+            if (bookingToUpdate == null)
+            {
+                throw new NotFoundException("Doesn't exist Restaurant with id " + id);
+            }
+            _mapper.Map(bookingRequest, bookingToUpdate);
+            return await _repository.Update(bookingToUpdate);
         }
     }
 }
